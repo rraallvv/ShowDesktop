@@ -195,7 +195,7 @@
 	
 	CIImage *bluredImage = [[CIFilter filterWithName: @"CIGaussianBlur" keysAndValues:
 							 kCIInputImageKey, grayscaleImage,
-							 kCIInputRadiusKey, @1.0, nil]
+							 kCIInputRadiusKey, @2.0, nil]
 							valueForKey: kCIOutputImageKey];
 	
 	
@@ -257,13 +257,15 @@
 		unsigned char r1, g1, b1;
 		unsigned char r2, g2, b2;
 		
-		float magnitud;
+		float difference, magnitud1, magnitud2;
 		
 		int index;
 		
 		const float f = 1/255.0;
 		
 		detectedArea = 0;
+		
+		float averageMagnitud = 0;
 		
 		for (xPoint = 0; xPoint < width; ++xPoint) {
 			for (yPoint = 0; yPoint < height; ++yPoint) {
@@ -273,27 +275,36 @@
 				g1 = inputData[index].g;
 				b1 = inputData[index].b;
 				
+				averageMagnitud = sqrtf(r * r + g * g + b * b) * f;
+			}
+		}
+		
+		averageMagnitud = averageMagnitud / (width * height);
+		
+		for (xPoint = 0; xPoint < width; ++xPoint) {
+			for (yPoint = 0; yPoint < height; ++yPoint) {
+				index = width * yPoint + xPoint;
+				
+				r1 = inputData[index].r;
+				g1 = inputData[index].g;
+				b1 = inputData[index].b;
+				
+				magnitud1 = sqrtf(r1 * r1 + g1 * g1 + b1 * b1) * f - averageMagnitud;
+				
 				r2 = previousInputData[index].r;
 				g2 = previousInputData[index].g;
 				b2 = previousInputData[index].b;
 				
-				r = outputData[index].r;
-				g = outputData[index].g;
-				b = outputData[index].b;
+				magnitud2 = sqrtf(r2 * r2 + g2 * g2 + b2 * b2) * f - previousAverageMagnitud;
 				
-				r = 0.1 * (r + r1 - r2);
-				g = 0.1 * (g + g1 - g2);
-				b = 0.1 * (b + b1 - b2);
+				difference = fabsf(magnitud1 - magnitud2);
 				
-				magnitud = sqrtf(r * r + g * g + b * b) * f;
+				outputData[index].r = 0.9 * outputData[index].r + 0.1 * difference * 255;
+				outputData[index].g = 0.9 * outputData[index].g + 0.1 * difference * 255;
+				outputData[index].b = 0.9 * outputData[index].b + 0.1 * difference * 255;
+				outputData[index].a = 0.9 * outputData[index].a + 0.1 * difference * 255;
 				
-				outputData[index].r = r;
-				outputData[index].g = g;
-				outputData[index].b = b;
-				outputData[index].a = magnitud * 255;
-				
-				
-				detectedArea += magnitud;
+				detectedArea += difference;
 				
 				previousInputData[index].r = inputData[index].r;
 				previousInputData[index].g = inputData[index].g;
@@ -302,7 +313,9 @@
 			}
 		}
 		
-		detectedArea = detectedArea / (0.025 * width * height);
+		previousAverageMagnitud = averageMagnitud;
+		
+		detectedArea = detectedArea / (0.05 * width * height);
 		
 	} else {
 		previousInputData = malloc(rowBytes * height);

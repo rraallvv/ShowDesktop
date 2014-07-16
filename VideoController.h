@@ -27,6 +27,7 @@ typedef struct { unsigned char r, g, b, a; } BPixel;
 	BOOL detection;
 	IBOutlet NSTextField *countLabel;
 	float detectedArea;
+	float previousAverageMagnitud;
 }
 
 - (IBAction)start:(NSButton*)sender;
