@@ -28,8 +28,10 @@ typedef struct { unsigned char r, g, b, a; } BPixel;
 	IBOutlet NSTextField *countLabel;
 	float detectedArea;
 	float previousAverageMagnitud;
+	NSUserDefaults *defaultSettings;
 }
 
 - (IBAction)start:(NSButton*)sender;
-- (void)calculateDifferenceBetween:(uint8_t *)image1 and:(uint8_t *)image2;
+- (IBAction)threshold:(NSSlider*)sender;
+
 @end

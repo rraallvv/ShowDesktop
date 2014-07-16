@@ -16,7 +16,10 @@
 
 - (void) awakeFromNib {
 	
-	mCaptureView.delegate = self;
+	// Restore saved settings
+	defaultSettings = [NSUserDefaults standardUserDefaults];
+	id savedValue = [defaultSettings valueForKey:@"Threshold"];
+	threshold.floatValue = savedValue ? [savedValue floatValue] : 15.0;
 	
 	// Create a new Capture Session
     mCaptureSession = [[QTCaptureSession alloc] init];
@@ -74,6 +77,8 @@
 			[mCaptureMovieFileOutput setCompressionOptions:compressionOptions forConnection:connection];
 			
 			[mCaptureView setCaptureSession:mCaptureSession];
+			
+			[mCaptureView setDelegate:self];
 		}
 		
 		// Start the capture session runing
@@ -106,6 +111,10 @@
 		
 		[self stopDetection];
     }
+}
+
+- (IBAction)threshold:(NSSlider*)sender {
+	[defaultSettings setFloat:sender.floatValue forKey:@"Threshold"];
 }
 
 - (void) minLengthTimerExpired:(NSTimer *)sender {
@@ -162,9 +171,6 @@
 	[self stopDetection];
 }
 
-- (void)calculateDifferenceBetween:(uint8_t *)image1 and:(uint8_t *)image2 {
-}
-
 - (void)captureOutput:(QTCaptureFileOutput *)captureOutput didFinishRecordingToOutputFileAtURL:(NSURL *)outputFileURL forConnections:(NSArray *)connections dueToError:(NSError *)error
 {
     [[NSWorkspace sharedWorkspace] openURL:outputFileURL];
@@ -172,6 +178,7 @@
 
 - (void)windowWillClose:(NSNotification *)notification
 {
+	[defaultSettings synchronize];
     [mCaptureSession stopRunning];
     [[mCaptureDeviceInput device] close];
 }

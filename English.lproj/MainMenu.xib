@@ -690,7 +690,10 @@
                     <slider verticalHuggingPriority="750" id="yUJ-Mm-DKH">
                         <rect key="frame" x="18" y="29" width="352" height="27"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                        <sliderCell key="cell" alignment="left" maxValue="100" doubleValue="18.827421171171171" tickMarkPosition="below" numberOfTickMarks="2" sliderType="linear" id="9gh-fo-KdC"/>
+                        <sliderCell key="cell" alignment="left" maxValue="100" doubleValue="15" tickMarkPosition="below" numberOfTickMarks="2" sliderType="linear" id="9gh-fo-KdC"/>
+                        <connections>
+                            <action selector="threshold:" target="536" id="4FO-hr-KBn"/>
+                        </connections>
                     </slider>
                 </subviews>
             </view>
