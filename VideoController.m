@@ -90,7 +90,7 @@
 	detection = !detection;
 	
     if (detection) {
-		sender.title = @"Stop";
+		sender.title = @"Stop & quit";
 		
 		countLabel.integerValue = kStartTime;
 		
