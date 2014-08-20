@@ -20,6 +20,7 @@
 	defaultSettings = [NSUserDefaults standardUserDefaults];
 	id savedValue = [defaultSettings valueForKey:@"Threshold"];
 	threshold.floatValue = savedValue ? [savedValue floatValue] : 15.0;
+	countLabel.intValue = [[defaultSettings valueForKey:@"FileNumber"] intValue];
 	
 	// Create a new Capture Session
     mCaptureSession = [[QTCaptureSession alloc] init];
@@ -92,7 +93,7 @@
     if (detection) {
 		sender.title = @"Stop & quit";
 		
-		countLabel.integerValue = kStartTime;
+		countLabel.intValue = kStartTime;
 		
 		// Create minLengthTimer to start detection
 		dispatch_async(dispatch_get_main_queue(), ^{
@@ -106,7 +107,7 @@
     } else {
 		[startTimer invalidate];
 		startTimer = nil;
-		countLabel.stringValue = @"--";
+		countLabel.intValue = [[defaultSettings valueForKey:@"FileNumber"] intValue];
 		sender.title = @"Capture";
 		
 		[self stopDetection];
@@ -127,11 +128,14 @@
 	if (countLabel.isHidden) {
 		countLabel.textColor = [NSColor blueColor];
 		countLabel.hidden = NO;
-		countLabel.integerValue = 0;
+		countLabel.intValue = [[defaultSettings valueForKey:@"FileNumber"] intValue];
 	}
-	countLabel.integerValue++;
+	countLabel.intValue++;
+	if (countLabel.intValue > 100)
+		countLabel.intValue = 1;
+	[defaultSettings setObject:@(countLabel.intValue) forKey:@"FileNumber"];
 	
-	NSString *filename = [NSString stringWithFormat: @"/Users/Shared/My Movie %ld.mov", (long)countLabel.integerValue];
+	NSString *filename = [NSString stringWithFormat: @"/Users/Shared/My Movie %03d.mov", countLabel.intValue];
 	[mCaptureMovieFileOutput recordToOutputFileURL:[NSURL fileURLWithPath:filename]];
 	
 	dispatch_async(dispatch_get_main_queue(), ^{
@@ -159,8 +163,8 @@
 }
 
 - (void) startTimerExpired:(NSTimer *)sender {
-	countLabel.integerValue--;
-	if (countLabel.integerValue == 0) {
+	countLabel.intValue--;
+	if (countLabel.intValue == 0) {
 		[startTimer invalidate];
 		startTimer = nil;
 		countLabel.hidden = YES;
