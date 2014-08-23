@@ -15,17 +15,17 @@
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
 	
 	for (NSScreen *screen in [NSScreen screens]) {
-		NSRect frame = [screen frame];
+		NSRect dummyFrame = {0,0,1,1};
 		
-		NSWindow *fullScreenWindow = [[NSWindow alloc] initWithContentRect:NSMakeRect(0, 0, 10, 10)
+		NSWindow *dummyWindow = [[NSWindow alloc] initWithContentRect:dummyFrame
 																 styleMask:NSBorderlessWindowMask
 																   backing:NSBackingStoreBuffered
 																	 defer:NO
 																	screen:screen];
 		
-		NSView *fullScreenView = [[NSView alloc] initWithFrame:frame];
-		[fullScreenWindow setContentView: fullScreenView];
-		[fullScreenWindow makeKeyAndOrderFront:self];
+		NSView *dummyView = [[NSView alloc] initWithFrame:dummyFrame];
+		[dummyWindow setContentView: dummyView];
+		[dummyWindow makeKeyAndOrderFront:self];
 	}
 	
 	NSArray *apps = [[NSWorkspace sharedWorkspace] runningApplications];
