@@ -17,7 +17,7 @@
 	for (NSScreen *screen in [NSScreen screens]) {
 		NSRect frame = [screen frame];
 		
-		NSWindow *fullScreenWindow = [[NSWindow alloc] initWithContentRect:NSMakeRect(0, 0, frame.size.width, frame.size.height)
+		NSWindow *fullScreenWindow = [[NSWindow alloc] initWithContentRect:NSMakeRect(0, 0, 10, 10)
 																 styleMask:NSBorderlessWindowMask
 																   backing:NSBackingStoreBuffered
 																	 defer:NO
@@ -28,12 +28,6 @@
 		[fullScreenWindow makeKeyAndOrderFront:self];
 	}
 	
-	// Insert code here to initialize your application
-	//[window setStyleMask:NSUtilityWindowMask | NSNonactivatingPanelMask];
-	[window setLevel:NSFloatingWindowLevel];
-	[window setCollectionBehavior:NSWindowCollectionBehaviorCanJoinAllSpaces|NSWindowCollectionBehaviorFullScreenAuxiliary];
-	
-	//[NSWorkspace.sharedWorkspace hideOtherApplications];
 	NSArray *apps = [[NSWorkspace sharedWorkspace] runningApplications];
 	
 	for (NSRunningApplication *app in apps) {
