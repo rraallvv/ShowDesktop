@@ -6,7 +6,7 @@
 //  Copyright 2010 __MyCompanyName__. All rights reserved.
 //
 
-#import "motiondetectionAppDelegate.h"
+#import "AppDelegate.h"
 
 @implementation motiondetectionAppDelegate
 
@@ -18,16 +18,18 @@
 	[window setLevel:NSFloatingWindowLevel];
 	[window setCollectionBehavior:NSWindowCollectionBehaviorCanJoinAllSpaces|NSWindowCollectionBehaviorFullScreenAuxiliary];
 	
-	[NSWorkspace.sharedWorkspace hideOtherApplications];
+	//[NSWorkspace.sharedWorkspace hideOtherApplications];
 	NSArray *apps = [[NSWorkspace sharedWorkspace] runningApplications];
 	
 	for (NSRunningApplication *app in apps) {
 		if([app.bundleIdentifier.lowercaseString isEqualToString:@"com.apple.finder"]) {
 			[app activateWithOptions:NSApplicationActivateAllWindows|NSApplicationActivateIgnoringOtherApps];
+		} else {
+			[app hide];
 		}
 	}
 	
-	//[NSApp terminate:self];
+	[NSApp terminate:self];
 }
 
 - (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)sender {
