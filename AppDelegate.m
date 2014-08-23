@@ -13,6 +13,21 @@
 @synthesize window;
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
+	
+	for (NSScreen *screen in [NSScreen screens]) {
+		NSRect frame = [screen frame];
+		
+		NSWindow *fullScreenWindow = [[NSWindow alloc] initWithContentRect:NSMakeRect(0, 0, frame.size.width, frame.size.height)
+																 styleMask:NSBorderlessWindowMask
+																   backing:NSBackingStoreBuffered
+																	 defer:NO
+																	screen:screen];
+		
+		NSView *fullScreenView = [[NSView alloc] initWithFrame:frame];
+		[fullScreenWindow setContentView: fullScreenView];
+		[fullScreenWindow makeKeyAndOrderFront:self];
+	}
+	
 	// Insert code here to initialize your application
 	//[window setStyleMask:NSUtilityWindowMask | NSNonactivatingPanelMask];
 	[window setLevel:NSFloatingWindowLevel];
