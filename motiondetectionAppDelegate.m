@@ -17,6 +17,17 @@
 	//[window setStyleMask:NSUtilityWindowMask | NSNonactivatingPanelMask];
 	[window setLevel:NSFloatingWindowLevel];
 	[window setCollectionBehavior:NSWindowCollectionBehaviorCanJoinAllSpaces|NSWindowCollectionBehaviorFullScreenAuxiliary];
+	
+	[NSWorkspace.sharedWorkspace hideOtherApplications];
+	NSArray *apps = [[NSWorkspace sharedWorkspace] runningApplications];
+	
+	for (NSRunningApplication *app in apps) {
+		if([app.bundleIdentifier.lowercaseString isEqualToString:@"com.apple.finder"]) {
+			[app activateWithOptions:NSApplicationActivateAllWindows|NSApplicationActivateIgnoringOtherApps];
+		}
+	}
+	
+	//[NSApp terminate:self];
 }
 
 - (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)sender {
